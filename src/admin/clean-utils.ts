@@ -65,13 +65,38 @@ const australiaStateMap: Record<string, string> = {
 };
 
 export function cleanRegion(country: string, state: string) {
-  if (country === 'USA') {
+  if (cleanCountry(country) === 'USA') {
     return usaStateMap[state] || state;
   }
 
-  if (country === 'Australia') {
+  if (cleanCountry(country) === 'Australia') {
     return australiaStateMap[state] || state;
   }
 
   return state;
+}
+
+
+const capitalizeEachWord = (countryName: string) => {
+  const result: string[] = countryName.split(' ').map((part) =>
+    part.slice(0, 1).toUpperCase() + part.slice(1).toLowerCase()
+  );
+  return result.join(' ');
+}
+
+export const cleanCountry = (countryName: string) => {
+  switch (countryName.toLowerCase()) {
+    case "united states":
+      return "USA";
+    case "usa":
+      return "USA";
+    case "suisse":
+      return "Switzerland";
+    case "russie":
+      return "Russia";
+    case "allemagne":
+      return "Germany";
+    default:
+      return capitalizeEachWord(countryName);
+  }
 }

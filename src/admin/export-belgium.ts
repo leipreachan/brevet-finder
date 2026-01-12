@@ -107,6 +107,8 @@ async function fetchBrevets(
 
 function cleanBrevets(brevets: Raw[]): Brevet[] {
   return brevets.map((brevet) => {
+    const cleanBrevet = brevet;
+    cleanBrevet.description = brevet.description.slice(0, 200);
     const distance = parseInt(
       brevet.categories.find(
         (cat) => cat.name !== 'brm' && Number.isInteger(parseInt(cat.name))
@@ -144,12 +146,12 @@ function cleanBrevets(brevets: Raw[]): Brevet[] {
         .trim(),
       time: 0,
       ascent: 0,
-      meta: brevet,
+      meta: cleanBrevet,
+      source: 'belgium',
     };
   });
 }
 
 export async function getData() {
-  console.log('Fetching Belgium brevets...');
   return cleanBrevets(await fetchBrevets());
 }

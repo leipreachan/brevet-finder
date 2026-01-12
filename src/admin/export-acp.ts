@@ -1,5 +1,5 @@
 import { Brevet } from '../types';
-import { cleanRegion } from './clean-utils';
+import { cleanCountry, cleanRegion } from './clean-utils';
 import { checkOk } from './fetch-utils';
 
 type Raw = {
@@ -55,12 +55,6 @@ async function fetchBrevets(data: {
   return brevets;
 }
 
-function cleanPays(pays: string): string {
-  if (pays === 'Allemagne') return 'Germany';
-  if (pays === 'Suisse') return 'Switzerland';
-  return pays;
-}
-
 function cleanDate(date: string): string {
   let [day, month, year] = date.split('/');
 
@@ -73,7 +67,7 @@ function cleanDate(date: string): string {
 
 function cleanBrevets(brevets: Raw[]): Brevet[] {
   return brevets.map((brevet) => {
-    const country = cleanPays(brevet.Pays);
+    const country = cleanCountry(brevet.Pays);
     const date = cleanDate(brevet.Date);
     const dateNumber = parseInt(date.split('/').reverse().join(''), 10);
     const distance = Math.floor(brevet.Distance / 100) * 100;
@@ -99,16 +93,16 @@ function cleanBrevets(brevets: Raw[]): Brevet[] {
       time: brevet.TimeDate,
       status: brevet.Statut,
       meta: brevet,
+      source: 'acp',
     };
   });
 }
 
 export async function getData() {
-  console.log('Fetching ACP brevets...');
   return cleanBrevets(
     await fetchBrevets({
       from: '2024-12-01',
-      to: '2026-12-01',
+      to: '2028-12-01',
     })
   );
 }

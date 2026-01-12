@@ -67,11 +67,11 @@ function cleanBrevets(brevets: Raw[]): Brevet[] {
         mail: brevet['E-Mail'],
         club: brevet['Organising Club'],
         meta: brevet,
+        source: 'ireland',
       };
     });
 }
 
 export async function getData() {
-  console.log('Fetching Ireland brevets...');
   return cleanBrevets(await fetchViaXlsx());
 }

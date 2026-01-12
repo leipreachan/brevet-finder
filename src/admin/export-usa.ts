@@ -70,11 +70,11 @@ function cleanBrevets(brevets: Raw[]): Brevet[] {
       mail: brevet.contactLink,
       map: brevet.map ? [brevet.map] : [],
       meta: brevet,
+      source: 'usa',
     };
   });
 }
 
 export async function getData() {
-  console.log('Fetching USA brevets...');
   return cleanBrevets(await fetchBrevets());
 }

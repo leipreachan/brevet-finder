@@ -6,7 +6,7 @@ export function Footer() {
       style={{ textAlign: 'justify', maxWidth: '60ch', margin: '0 auto' }}
     >
       <p>
-        Made with 🚲 by <a href="https://haroen.me">Haroen Viaene</a>. Data
+        Originally made with 🚲 by <a href="https://haroen.me">Haroen Viaene</a>. Data
         sources:{' '}
         <a href="https://www.audax-club-parisien.com/organisation/brm-monde/#calendrier-BRM">
           ACP
@@ -18,8 +18,12 @@ export function Footer() {
         <a href="https://www.audaxitalia.it">Audax Italia</a>,{' '}
         <a href="https://www.audaxireland.org">Audax Ireland</a>,{' '}
         <a href="https://randonneurs.be">Randonneurs BE</a>,{' '}
-        <a href="https://www.randonneurs.nl">Randonneurs NL</a>. Code available
-        on <a href="https://github.com/haroenv/brm-search">GitHub</a>.
+        <a href="https://www.randonneurs.nl">Randonneurs NL</a>. 
+      </p>
+      <p>
+        Original code available on <a href="https://github.com/haroenv/brm-search">GitHub</a>.
+        <br/>
+        The updated code available on <a href="https://github.com/leipreachan/brm-search">GitHub</a>.
       </p>
       <p>
         A Brevet is a long-distance cycling event with as goal to move your own

@@ -120,7 +120,7 @@ export function SearchApp({
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: small ? '1fr' : 'minmax(330px, 1fr) 4fr',
+              gridTemplateColumns: small ? '1fr' : '1fr 4fr',
               gap: '1em',
             }}
           >
@@ -151,37 +151,34 @@ function Sidebar({ logo = true }: { logo?: boolean }) {
             attribute="distance"
             limit={6}
             showMoreLimit={40}
-            transformItems={(items) =>
-              items
-                .toSorted((a, b) => parseInt(a.value) - parseInt(b.value))
-                .map((item) => ({
-                  ...item,
-                  label: item.label + ' km',
-                }))
-            }
+            transformItems={(items) => items
+              .toSorted((a, b) => parseInt(a.value) - parseInt(b.value))
+              .map((item) => ({
+                ...item,
+                label: item.label + ' km',
+              }))}
             searchable
-            showMore
-          />
+            showMore searchableSelectOnSubmit={undefined}          />
         </Panel>
       </RefinementListWrapper>
       <RefinementListWrapper attribute="country">
         <Panel header="country">
-          <RefinementList attribute="country" searchable showMore />
+          <RefinementList attribute="country" searchable showMore searchableSelectOnSubmit={undefined} />
         </Panel>
       </RefinementListWrapper>
       <RefinementListWrapper attribute="region">
         <Panel header="region">
-          <RefinementList attribute="region" searchable showMore />
+          <RefinementList attribute="region" searchable showMore searchableSelectOnSubmit={undefined} />
         </Panel>
       </RefinementListWrapper>
       <RefinementListWrapper attribute="department">
         <Panel header="department">
-          <RefinementList attribute="department" searchable showMore />
+          <RefinementList attribute="department" searchable showMore searchableSelectOnSubmit={undefined} />
         </Panel>
       </RefinementListWrapper>
       <RefinementListWrapper attribute="city">
         <Panel header="city">
-          <RefinementList attribute="city" searchable showMore />
+          <RefinementList attribute="city" searchable showMore searchableSelectOnSubmit={undefined} />
         </Panel>
       </RefinementListWrapper>
     </div>
@@ -337,6 +334,7 @@ function RefinementListWrapper({
   attribute: string;
 }) {
   const { canRefine, items } = useRefinementList({ attribute });
+  // console.log(`${canRefine} ${attribute}`);
   return (
     <div hidden={!canRefine || (items.length === 1 && !items[0].isRefined)}>
       {children}

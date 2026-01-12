@@ -17,4 +17,5 @@ export type Brevet = {
   time?: number;
   status?: string;
   meta: any;
+  source: string;
 };

@@ -49,11 +49,11 @@ function cleanBrevets(brevets: Raw[]): Brevet[] {
         site: 'https://www.audaxitalia.it/index.php?pg=manifestazioni',
         club: brevet.ORGANIZZATORE,
         meta: brevet,
+        source: 'italy',
       };
     });
 }
 
 export async function getData() {
-  console.log('Fetching Italy brevets...');
   return cleanBrevets(await fetchViaXlsx());
 }

@@ -13,7 +13,7 @@ type Raw = {
     region: string;
     title: string;
   };
-  start: `2025-01-25T09:00:00Z[UTC]`;
+  start: `2026-01-01T09:00:00Z[UTC]`;
   title: string;
   url: string;
 };
@@ -22,7 +22,7 @@ async function fetchBrevets(): Promise<Raw[]> {
   const url = new URL('https://randonneurs.nl/api/v1/events');
   url.search = new URLSearchParams({
     from: new Date().toISOString().split('T')[0],
-    until: '2026-01-01',
+    until: '2027-01-01',
   }).toString();
 
   const events: Raw[] = await fetch(url)
@@ -57,11 +57,11 @@ function cleanBrevets(brevets: Raw[]): Brevet[] {
       time: 0,
       ascent: 0,
       meta: brevet,
+      source: 'netherlands',
     };
   });
 }
 
 export async function getData() {
-  console.log('Fetching Netherlands brevets...');
   return cleanBrevets(await fetchBrevets());
 }

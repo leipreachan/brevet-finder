@@ -23,7 +23,7 @@ type Raw = {
 
 // from: https://www.randonneursmondiaux.org/59-Calendrier.html
 const GOOGLE_DOCS_URL = new URL(
-  'https://docs.google.com/spreadsheets/d/e/2PACX-1vRU8adejamxip0ue6pMMGgRjPDNrboJp6SWYlf_k7HmhLyXSjEIMqOetBS5MSiRHZ96r9K7nzgtU9uc/pubhtml?gid=1480200001&single=true'
+  'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRU8adejamxip0ue6pMMGgRjPDNrboJp6SWYlf_k7HmhLyXSjEIMqOetBS5MSiRHZ96r9K7nzgtU9uc/pubhtml/sheet?headers=false&gid=1480200001'
 );
 
 async function fetchViaHtml() {
@@ -149,11 +149,11 @@ function cleanBrevets(brevets: Raw[]): Brevet[] {
       ascent: parseInt(brevet.Elevation.replace(',', ''), 10),
       time,
       meta: brevet,
+      source: 'lrm',
     };
   });
 }
 
 export async function getData() {
-  console.log('Fetching Randonneurs Mondiaux brevets...');
   return cleanBrevets(await fetchViaHtml());
 }

@@ -9,10 +9,23 @@ import * as ireland from './export-ireland';
 import * as italy from './export-italy';
 import * as belgium from './export-belgium';
 import * as netherlands from './export-netherlands';
+import { Brevet } from '../types';
+
+const organizations = {
+  acp: acp.getData,
+  supabase: map.getData,
+  lrm: lrm.getData,
+  usa: usa.getData,
+  auk: auk.getData,
+  ireland: ireland.getData,
+  italy: italy.getData,
+  belgium: belgium.getData,
+  netherlands: netherlands.getData
+};
 
 const flags = {
   acp: true,
-  map: true,
+  supabase: true,
   lrm: true,
   usa: true,
   auk: true,
@@ -45,17 +58,26 @@ if (flags.filter) {
   });
 }
 
-const data = [
-  ...(flags.acp ? await acp.getData() : []),
-  ...(flags.map ? await map.getData() : []),
-  ...(flags.lrm ? await lrm.getData() : []),
-  ...(flags.usa ? await usa.getData() : []),
-  ...(flags.auk ? await auk.getData() : []),
-  ...(flags.ireland ? await ireland.getData() : []),
-  ...(flags.italy ? await italy.getData() : []),
-  ...(flags.belgium ? await belgium.getData() : []),
-  ...(flags.netherlands ? await netherlands.getData() : []),
-];
+const dataPromise = Object.keys(flags)
+  .filter((key) => organizations.hasOwnProperty(key) && flags[key as keyof typeof flags] === true)
+  .map(async (key) => {
+    console.log(`Fetching ${key} brevets...`);
+    return organizations[key as keyof typeof organizations]()
+      .then((result) => {
+        console.log(`Got ${result.length} ${key} brevets`);
+        return result;
+      })
+      .catch((err) => {
+        console.log(`Error while fetching ${key}\n`, err);
+        const emptyResult: Brevet[] = [];
+        return emptyResult;
+      }
+    );
+  });
+
+const dataRaw = await Promise.all(dataPromise);
+
+const data = dataRaw.flat();
 
 const newObjects = flags.filter
   ? data.filter((brevet) => !allObjectIds.has(brevet.objectID))

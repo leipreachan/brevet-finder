@@ -78,11 +78,11 @@ function cleanBrevets(brevets: Raw[]): Brevet[] {
         club: brevet.Body,
         ascent: climb,
         meta: brevet,
+        source: 'auk',
       };
     });
 }
 
 export async function getData() {
-  console.log('Fetching AUK brevets...');
   return cleanBrevets(await fetchBrevets());
 }

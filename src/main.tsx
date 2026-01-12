@@ -5,6 +5,7 @@ import type { InstantSearchOptions } from 'instantsearch.js';
 import './map';
 import { DetailsApp } from './details';
 import { SearchApp } from './search';
+import { StrictMode } from 'react';
 
 const rootDiv = document.getElementById('root') as HTMLElement;
 const root = ReactDOM.createRoot(rootDiv);
@@ -37,4 +38,7 @@ const insights: InstantSearchOptions['insights'] = {
 const objectID = new URLSearchParams(location.search).get('objectID');
 const App = objectID ? DetailsApp : SearchApp;
 
-root.render(<App searchClient={searchClient} insights={insights} />);
+root.render(
+<StrictMode>
+  <App searchClient={searchClient} insights={insights} />
+</StrictMode>);
