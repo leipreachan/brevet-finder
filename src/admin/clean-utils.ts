@@ -89,7 +89,9 @@ export const cleanCountry = (countryName: string) => {
     case "united states":
       return "USA";
     case "usa":
-      return "USA";
+      return "USA";    
+    case "united kingdom":
+      return "UK";
     case "suisse":
       return "Switzerland";
     case "russie":

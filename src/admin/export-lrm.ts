@@ -3,6 +3,7 @@ import * as cheerio from 'cheerio';
 import { Brevet } from '../types';
 import { numToDate, numToDateString, weirdDateToNum } from '../date';
 import { checkOk } from './fetch-utils';
+import { cleanCountry } from './clean-utils';
 
 type Raw = {
   Date: string;
@@ -141,7 +142,7 @@ function cleanBrevets(brevets: Raw[]): Brevet[] {
       dateNumber,
       distance,
       name: brevet['Event Name'],
-      country: brevet.Country,
+      country: cleanCountry(brevet.Country),
       city: brevet['Start Location'],
       map: [brevet.links?.Distance!].filter(Boolean),
       site: brevet.links?.['Event Name'],

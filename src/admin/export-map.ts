@@ -87,13 +87,14 @@ const cleanLoc = (countryName: string, second: string) => {
 
 function cleanBrevets(brevets: Raw[]): Brevet[] {
   return brevets.map((brevet) => {
-    const dateNumber = parseInt(brevet.date_brevet.split('-').reverse().join(''), 10);
+    const dateNumber = parseInt(brevet.date_brevet.split('-').join(''), 10);
+    const date = brevet.date_brevet.split('-').reverse().join('/');
     const time = numToDate(dateNumber).getTime() / 1000;
 
     const country = cleanCountry(brevet.pays ?? "")
     return {
       objectID: 'supabase__' + brevet.id.toString(),
-      date: brevet.date_brevet,
+      date,
       dateNumber,
       name: brevet.nom_brm,
       distance: brevet.distance_brevet,

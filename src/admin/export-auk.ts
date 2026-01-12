@@ -31,7 +31,7 @@ async function fetchBrevets() {
 }
 
 const url = (pathOrUrl?: string) =>
-  new URL(pathOrUrl || '', 'https://www.audax.uk/event-details/').toString();
+  new URL(`https://www.audax.uk/event-details/calendar/${pathOrUrl ?? ''}`).toString();
 
 function padDate(date: number) {
   if (date < 10) {
