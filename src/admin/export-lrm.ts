@@ -133,17 +133,21 @@ function cleanBrevets(brevets: Raw[]): Brevet[] {
     const dateNumber = weirdDateToNum(brevet.Date);
     const date = numToDateString(dateNumber).split('-').reverse().join('/');
     const time = numToDate(dateNumber).getTime() / 1000;
+    const country = cleanCountry(brevet.Country)
+    const region = '';
+    const city = brevet['Start Location'];
 
     return {
       objectID: [date, distance, brevet.Country, brevet['Start Location']].join(
         '__'
       ),
+      id: [dateNumber, distance, country, region, city].join(' '),
       date,
       dateNumber,
       distance,
       name: brevet['Event Name'],
-      country: cleanCountry(brevet.Country),
-      city: brevet['Start Location'],
+      country,
+      city,
       map: [brevet.links?.Distance!].filter(Boolean),
       site: brevet.links?.['Event Name'],
       club: brevet.Organizer,

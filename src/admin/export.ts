@@ -58,26 +58,44 @@ if (flags.filter) {
   });
 }
 
+const fetchData = async (key: string) => {
+  console.log(`Fetching ${key} brevets...`);
+  return organizations[key as keyof typeof organizations]()
+    .then((result) => {
+      console.log(`Got ${result.length} ${key} brevets`);
+      return result;
+    })
+    .catch((err) => {
+      console.log(`Error while fetching ${key}\n`, err);
+      const emptyResult: Brevet[] = [];
+      return emptyResult;
+    }
+    );
+}
+
 const dataPromise = Object.keys(flags)
   .filter((key) => organizations.hasOwnProperty(key) && flags[key as keyof typeof flags] === true)
-  .map(async (key) => {
-    console.log(`Fetching ${key} brevets...`);
-    return organizations[key as keyof typeof organizations]()
-      .then((result) => {
-        console.log(`Got ${result.length} ${key} brevets`);
-        return result;
-      })
-      .catch((err) => {
-        console.log(`Error while fetching ${key}\n`, err);
-        const emptyResult: Brevet[] = [];
-        return emptyResult;
-      }
-    );
-  });
+  .map(async (key) => fetchData(key));
 
-const dataRaw = await Promise.all(dataPromise);
+const dataRaw = (await Promise.all(dataPromise)).flat();
 
-const data = dataRaw.flat();
+const dataMap: Map<string, Brevet> = new Map();
+const supabaseMap: Map<string, Brevet> = new Map();
+for (const item of dataRaw) {
+  if (item.source == 'supabase') {
+    supabaseMap.set(item.id, item);
+  } else {
+    dataMap.set(item.id, item);
+  }
+}
+
+for (const [index, item] of supabaseMap) {
+  if (!dataMap.has(index)) {
+    dataMap.set(index, item);
+  }
+}
+
+const data = Array.from(dataMap.values());
 
 const newObjects = flags.filter
   ? data.filter((brevet) => !allObjectIds.has(brevet.objectID))
@@ -95,4 +113,4 @@ const objects = [...withGeoLoc, ...withoutGeoLoc];
 
 await Bun.write('brevets.json', JSON.stringify(objects, null, 2));
 
-console.log(`Exported ${objects.length} brevets`);
+console.log(`\nExported ${objects.length} brevets`);

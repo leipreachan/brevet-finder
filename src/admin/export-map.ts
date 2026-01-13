@@ -90,18 +90,22 @@ function cleanBrevets(brevets: Raw[]): Brevet[] {
     const dateNumber = parseInt(brevet.date_brevet.split('-').join(''), 10);
     const date = brevet.date_brevet.split('-').reverse().join('/');
     const time = numToDate(dateNumber).getTime() / 1000;
-
+    const distance = brevet.distance_brevet;
     const country = cleanCountry(brevet.pays ?? "")
+    const region = cleanLoc(country, brevet.region);
+    const city = brevet.ville_depart;
+
     return {
       objectID: 'supabase__' + brevet.id.toString(),
+      id: [dateNumber, distance, country, region, city].join(' '),
       date,
       dateNumber,
       name: brevet.nom_brm,
-      distance: brevet.distance_brevet,
-      country: country,
-      region: cleanLoc(country, brevet.region),
+      distance,
+      country,
+      region,
       department: cleanLoc(country, brevet.departement),
-      city: brevet.ville_depart,
+      city,
       _geoloc:
         brevet.latitude && brevet.longitude
           ? [{ lat: brevet.latitude, lng: brevet.longitude }]

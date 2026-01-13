@@ -53,16 +53,19 @@ function cleanBrevets(brevets: Raw[]): Brevet[] {
       const distance = parseInt(brevet.Distance) || 0;
       const dateNumber = dateToNum(shortYearDateToDate(brevet.Date));
       const date = numToDateString(dateNumber).split('-').reverse().join('/');
+      const region = brevet.Province;
+      const city = brevet.Start;
 
       return {
-        objectID: [date, distance, country, brevet.Start].join('__'),
+        objectID: [date, distance, country, city].join('__'),
+        id: [dateNumber, distance, country, region, city].join(' '),
         date,
         dateNumber,
         distance,
         name: brevet['Event Name'],
         country: country,
-        region: brevet.Province,
-        city: brevet.Start,
+        region,
+        city,
         site: eventUrl(brevet['Event Name'], distance),
         mail: brevet['E-Mail'],
         club: brevet['Organising Club'],

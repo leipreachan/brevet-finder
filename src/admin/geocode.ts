@@ -37,6 +37,46 @@ export async function addGeoloc(brevets: Brevet[]) {
       brevet._geoloc = [location];
     }
   }
+  /**
+   export async function addGeoloc(brevets: Brevet[]) {
+  const progress = new Progress(brevets.length);
+
+  const BATCH_SIZE = 2;
+  for (let i = 0; i < brevets.length; i += BATCH_SIZE) {
+
+    const batch = brevets
+      .slice(i, i + BATCH_SIZE);
+    await Promise.all(
+      batch.map(async (brevet, batchIndex) => {
+        const index = i + batchIndex;
+        progress.update(index);
+        if (brevet._geoloc?.[0]) {
+          return;
+        }
+
+        const address = [
+          brevet.city,
+          brevet.department,
+          brevet.region,
+          brevet.country,
+        ]
+          .filter(Boolean)
+          .join(', ');
+
+        const out = await client.geocode({
+          params: {
+            address,
+            key: GOOGLE_MAPS,
+          },
+        });
+
+        const location = out?.data?.results?.[0]?.geometry?.location;
+        if (location.lat && location.lng) {
+          brevet._geoloc = [location];
+        }
+      }));
+  }
+   */
 
   return brevets;
 }

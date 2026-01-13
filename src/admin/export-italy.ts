@@ -36,16 +36,19 @@ function cleanBrevets(brevets: Raw[]): Brevet[] {
         Date.parse(dateString.split('/').reverse().join('-'))
       );
       const dateNumber = dateToNum(dateAsDate);
+      const region = brevet.REGIONE;
+      const city = brevet.COMUNE
 
       return {
         objectID: [dateString, distance, country, brevet.COMUNE].join('__'),
+        id: [dateNumber, distance, country, region, city].join(' '),
         date: dateString,
         dateNumber,
         distance,
         name: brevet.MANIFESTAZIONE,
         country: country,
-        region: brevet.REGIONE,
-        city: brevet.COMUNE,
+        region,
+        city,
         site: 'https://www.audaxitalia.it/index.php?pg=manifestazioni',
         club: brevet.ORGANIZZATORE,
         meta: brevet,

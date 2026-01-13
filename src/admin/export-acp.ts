@@ -76,6 +76,7 @@ function cleanBrevets(brevets: Raw[]): Brevet[] {
 
     return {
       objectID: [date, distance, country, city].join('__'),
+      id: [dateNumber, distance, country, region, city].join(' '),
       date,
       dateNumber,
       distance,

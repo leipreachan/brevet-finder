@@ -38,6 +38,7 @@ function cleanBrevets(brevets: Raw[]): Brevet[] {
     const dateNumber = dateToNum(new Date(brevet.start.split('T')[0]));
     const distance = brevet.distance;
     const country = 'The Netherlands';
+    const region = '';
     const city = brevet.from.city;
     const title = brevet.title;
     const mail = brevet.contact.email;
@@ -45,6 +46,7 @@ function cleanBrevets(brevets: Raw[]): Brevet[] {
 
     return {
       objectID: [date, distance, country, city].join('__'),
+      id: [dateNumber, distance, country, region, city].join(' '),
       date,
       dateNumber,
       name: title,

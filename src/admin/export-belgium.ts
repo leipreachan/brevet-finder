@@ -120,11 +120,13 @@ function cleanBrevets(brevets: Raw[]): Brevet[] {
     const { year, month, day } = brevet.start_date_details;
     const date = [day, month, year].join('/');
     const dateNumber = parseInt([year, month, day].join(''), 10);
+    const region = '';
 
     const $ = cheerio.load(brevet.description);
 
     return {
       objectID: [date, distance, country, city].join('__'),
+      id: [dateNumber, distance, country, region, city].join(' '),
       date,
       dateNumber,
       name: title,

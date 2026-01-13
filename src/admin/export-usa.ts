@@ -53,11 +53,13 @@ function cleanBrevets(brevets: Raw[]): Brevet[] {
     const [state, city] = brevet.location.split(': ');
     const date = brevet.date.split('/').reverse().join('/');
     const dateNumber = parseInt(brevet.date.replaceAll('/', ''), 10);
+    const region = '';
     const country = 'USA';
     const distance = Math.floor(parseInt(brevet.distance, 10) / 100) * 100;
 
     return {
       objectID: [date, distance, country, city].join('__'),
+      id: [dateNumber, distance, country, region, city].join(' '),
       name: brevet.name,
       date,
       dateNumber,
