@@ -17,7 +17,7 @@ export function DetailsApp({
   return (
     <InstantSearch
       searchClient={searchClient}
-      indexName="brevets"
+      indexName={process.env.READ_INDEX}
       insights={insights}
       future={{
         persistHierarchicalRootCount: true,

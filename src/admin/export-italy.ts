@@ -31,18 +31,17 @@ function cleanBrevets(brevets: Raw[]): Brevet[] {
     .filter((brevet) => !isNaN(parseInt(brevet.DATA)))
     .map((brevet) => {
       const distance = parseInt(brevet.DISTANZA) || undefined;
-      const dateString = brevet.DATA;
+      const date = brevet.DATA;
       const dateAsDate = new Date(
-        Date.parse(dateString.split('/').reverse().join('-'))
+        Date.parse(date.split('/').reverse().join('-'))
       );
       const dateNumber = dateToNum(dateAsDate);
       const region = brevet.REGIONE;
       const city = brevet.COMUNE
 
       return {
-        objectID: [dateString, distance, country, brevet.COMUNE].join('__'),
-        id: [dateNumber, distance, country, region, city].join(' '),
-        date: dateString,
+        objectID: [date, distance, country, region, city].join('__').replace(/\W+/g, '_'),
+        date,
         dateNumber,
         distance,
         name: brevet.MANIFESTAZIONE,

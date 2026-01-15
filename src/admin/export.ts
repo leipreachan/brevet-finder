@@ -25,7 +25,7 @@ const organizations = {
 
 const flags = {
   acp: true,
-  supabase: true,
+  supabase: true, // also ACP
   lrm: true,
   usa: true,
   auk: true,
@@ -37,7 +37,7 @@ const flags = {
   filter: true,
 };
 
-const { ALGOLIA_APP = '', ALGOLIA_WRITE = '' } = process.env;
+const { ALGOLIA_APP = '', ALGOLIA_WRITE = '', READ_INDEX = '' } = process.env;
 if (!ALGOLIA_APP && flags.filter) {
   throw new Error('Missing ALGOLIA_APP env variable');
 }
@@ -48,7 +48,7 @@ if (!ALGOLIA_WRITE && flags.filter) {
 const searchClient = algoliasearch(ALGOLIA_APP, ALGOLIA_WRITE);
 const allObjectIds = new Set<string>();
 if (flags.filter) {
-  await searchClient.initIndex('brevets').browseObjects({
+  await searchClient.initIndex(READ_INDEX).browseObjects({
     attributesToRetrieve: ['objectID'],
     batch: (objects) => {
       objects.forEach((object) => {
@@ -83,19 +83,29 @@ const dataMap: Map<string, Brevet> = new Map();
 const supabaseMap: Map<string, Brevet> = new Map();
 for (const item of dataRaw) {
   if (item.source == 'supabase') {
-    supabaseMap.set(item.id, item);
+    supabaseMap.set(item.objectID, item);
   } else {
-    dataMap.set(item.id, item);
+    dataMap.set(item.objectID, item);
   }
 }
 
+// add name from supabase to other audaxes, if index is the the same
 for (const [index, item] of supabaseMap) {
-  if (!dataMap.has(index)) {
+  if (dataMap.has(index)) {
+    const supabaseName = supabaseMap.get(index)?.name;
+    const current = dataMap.get(index);
+    if (supabaseName && current) {
+      current.name = supabaseName;
+      dataMap.set(index, current);
+    }
+  } else {
     dataMap.set(index, item);
   }
 }
 
 const data = Array.from(dataMap.values());
+
+await Bun.write('brevets_unfiltered.json', JSON.stringify(data, null, 2));
 
 const newObjects = flags.filter
   ? data.filter((brevet) => !allObjectIds.has(brevet.objectID))

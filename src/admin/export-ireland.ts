@@ -57,8 +57,8 @@ function cleanBrevets(brevets: Raw[]): Brevet[] {
       const city = brevet.Start;
 
       return {
-        objectID: [date, distance, country, city].join('__'),
-        id: [dateNumber, distance, country, region, city].join(' '),
+        objectID: [date, distance, country, city].join('__').replace(/\W+/g, '_'),
+        id: [dateNumber, distance, country, region, city].join(' ').replace(/\W+/g, '_'),
         date,
         dateNumber,
         distance,

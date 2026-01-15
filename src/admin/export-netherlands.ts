@@ -45,8 +45,7 @@ function cleanBrevets(brevets: Raw[]): Brevet[] {
     const club = 'Randonneurs NL';
 
     return {
-      objectID: [date, distance, country, city].join('__'),
-      id: [dateNumber, distance, country, region, city].join(' '),
+      objectID: [date, distance, country, region, city].join('__').replace(/\W+/g, '_'),
       date,
       dateNumber,
       name: title,

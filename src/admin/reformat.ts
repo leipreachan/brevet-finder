@@ -2,7 +2,7 @@ import { Brevet } from '../types';
 import { cleanRegion } from './clean-utils';
 import algoliasearch from 'algoliasearch';
 
-const { ALGOLIA_APP = '', ALGOLIA_WRITE = '' } = process.env;
+const { ALGOLIA_APP = '', ALGOLIA_WRITE = '', READ_INDEX = '' } = process.env;
 if (!ALGOLIA_APP) {
   throw new Error('Missing ALGOLIA_APP env variable');
 }
@@ -15,7 +15,7 @@ let data: Brevet[] = [];
 
 if (FROM_INDEX) {
   const client = algoliasearch(ALGOLIA_APP!, ALGOLIA_WRITE!);
-  await client.initIndex('brevets').browseObjects<Brevet>({
+  await client.initIndex(READ_INDEX).browseObjects<Brevet>({
     batch: (objects) => {
       objects.forEach((object) => {
         data.push(object);

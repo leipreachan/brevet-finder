@@ -1,7 +1,7 @@
 import { numToDate } from '../date';
 import { Brevet } from '../types';
 import { checkOk } from './fetch-utils';
-import { cleanCountry } from './clean-utils';
+import { cleanCountry, cleanLoc } from './clean-utils';
 
 const { SUPABASE = '' } = process.env;
 if (!SUPABASE) {
@@ -23,7 +23,7 @@ type Raw = {
   club_id: string;
   denivele: string;
   eligible_r1000: boolean;
-  lien_itineraire_brm: unknown;
+  lien_itineraire_brm: string;
   gpx_file_path?: string;
   acces_homiolagations: boolean;
   pays: string;
@@ -32,8 +32,11 @@ type Raw = {
   page_web_club: string;
 };
 
+// https://map.audax-club-parisien.com/
+
 async function fetchPage(apikey: string, offset: number): Promise<Raw[]> {
-  const fields = "id,date_brevet,distance_brevet,nom_brm,latitude,longitude,ville_depart,departement,region,nom_organisateur,mail_organisateur,club_id,denivele,eligible_r10000,lien_itineraire_brm,acces_homologations,code_acp,nom_club,page_web_club,representant_acp,email_representant_acp,pays"
+  // const fields = "id,date_brevet,distance_brevet,nom_brm,latitude,longitude,ville_depart,departement,region,pays,site,nom_organisateur,mail_organisateur,club_id,denivele,eligible_r10000,lien_itineraire_brm,acces_homologations,code_acp,nom_club,page_web_club,representant_acp,email_representant_acp"
+  const fields = "%2A";
 
   const url = new URL(
     `https://ranqsfwmoexghudpvpob.supabase.co/rest/v1/brevets?select=${fields}`
@@ -79,12 +82,6 @@ async function fetchBrevets(): Promise<Raw[]> {
   return brevets.flat();
 }
 
-const cleanLoc = (countryName: string, second: string) => {
-  if (countryName && second && countryName.toLowerCase() == second.toLowerCase()) {
-    return ""
-  }
-}
-
 function cleanBrevets(brevets: Raw[]): Brevet[] {
   return brevets.map((brevet) => {
     const dateNumber = parseInt(brevet.date_brevet.split('-').join(''), 10);
@@ -92,25 +89,26 @@ function cleanBrevets(brevets: Raw[]): Brevet[] {
     const time = numToDate(dateNumber).getTime() / 1000;
     const distance = brevet.distance_brevet;
     const country = cleanCountry(brevet.pays ?? "")
-    const region = cleanLoc(country, brevet.region);
+    const department = cleanLoc(country, brevet?.departement);
+    const region = cleanLoc(country, brevet?.region);
     const city = brevet.ville_depart;
+    const map = brevet?.lien_itineraire_brm ?? "";
 
     return {
-      objectID: 'supabase__' + brevet.id.toString(),
-      id: [dateNumber, distance, country, region, city].join(' '),
+      objectID: [date, distance, country, region, city].join('__').replace(/\W+/g, '_'),
       date,
       dateNumber,
       name: brevet.nom_brm,
       distance,
       country,
       region,
-      department: cleanLoc(country, brevet.departement),
+      department,
       city,
       _geoloc:
         brevet.latitude && brevet.longitude
           ? [{ lat: brevet.latitude, lng: brevet.longitude }]
           : [],
-      map: [""],
+      map: [map],
       site: brevet?.page_web_club ?? "",
       mail: brevet.mail_organisateur,
       club: brevet?.nom_club ?? brevet.club_id ?? "",

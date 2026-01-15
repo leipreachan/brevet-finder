@@ -36,6 +36,7 @@ type UiState = InstantSearchUiState & {
 type IndexUiState = InstantSearchUiState['string'] &
   Partial<ViewIndexUiState<View>>;
 
+  console.log(`index = ${process.env.READ_INDEX}`);
 const routing: InstantSearchOptions<UiState, IndexUiState>['routing'] = {
   stateMapping: {
     stateToRoute(uiState) {
@@ -44,7 +45,7 @@ const routing: InstantSearchOptions<UiState, IndexUiState>['routing'] = {
         geoSearch,
         range = {},
         ...indexUiState
-      } = uiState['brevets'];
+      } = uiState[process.env.READ_INDEX || ""];
       const { dateNumber, ...rangeUiState } = range;
       return {
         ...indexUiState,
@@ -107,7 +108,7 @@ export function SearchApp({
     <SizeContext.Provider value={small}>
       <InstantSearch
         searchClient={searchClient}
-        indexName="brevets"
+        indexName={process.env.READ_INDEX}
         routing={routing}
         insights={insights}
         future={{

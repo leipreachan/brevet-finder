@@ -215,13 +215,7 @@ function cleanBrevets(brevets: Raw[]): Brevet[] {
       const climb = brevet.Climb || 0;
 
       return {
-        objectID: [
-          date,
-          distance,
-          country,
-          city.replace(/\W+/g, '_'),
-        ].join('__'),
-        id: [dateNumber, distance, country, region, city].join(' '),
+        objectID: [date, distance, country, region, city].join('__').replace(/\W+/g, '_'),
         name: brevet.Title,
         date,
         dateNumber,

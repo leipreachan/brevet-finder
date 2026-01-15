@@ -5,6 +5,7 @@ const {
   ALGOLIA_APP = '',
   ALGOLIA_WRITE = '',
   GITHUB_STEP_SUMMARY = '',
+  WRITE_INDEX = '',
 } = process.env;
 if (!ALGOLIA_APP) {
   throw new Error('Missing ALGOLIA_APP env variable');
@@ -38,7 +39,7 @@ for (const [id, value] of supabase) {
 const client = algoliasearch(ALGOLIA_APP, ALGOLIA_WRITE);
 
 await client
-  .initIndex('brevets')
+  .initIndex(WRITE_INDEX)
   .partialUpdateObjects(data, { createIfNotExists: true });
 
 if (GITHUB_STEP_SUMMARY) {

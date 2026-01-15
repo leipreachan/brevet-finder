@@ -64,6 +64,13 @@ const australiaStateMap: Record<string, string> = {
   WA: 'Western Australia',
 };
 
+export const cleanLoc = (countryName: string, second: string) => {
+  if (countryName && second && countryName.toLowerCase() == second.toLowerCase()) {
+    return "";
+  }
+  return second;
+}
+
 export function cleanRegion(country: string, state: string) {
   if (cleanCountry(country) === 'USA') {
     return usaStateMap[state] || state;

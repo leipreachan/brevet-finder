@@ -1,6 +1,5 @@
 export type Brevet = {
   objectID: string;
-  id: string;
   date: string;
   dateNumber: number;
   name?: string;
