@@ -2,7 +2,7 @@ import { Brevet } from './types';
 
 export function HitCard({ hit }: { hit: Brevet }) {
   const maps = hit.map?.filter((item) => item).map((item) => item.split(' ')).flat();
-  
+  const site = hit.site && (hit.site.startsWith('http') ? hit.site : `http://${hit.site}`).replace('wwww.', 'www.');
   return (
     <div
       data-objectid={hit.objectID}
@@ -22,10 +22,10 @@ export function HitCard({ hit }: { hit: Brevet }) {
       {Boolean(hit.ascent) && <p>{hit.ascent} m</p>}
       {Boolean(hit.site) && (
         <a
-          href={hit.site}
+          href={site}
           target="_blank"
         >
-          {hit.site}
+          {site}
         </a>
       )}
       <p><a href={'mailto:' + hit.mail}>{hit.mail}</a></p>
