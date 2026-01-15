@@ -62,3 +62,13 @@ body {
   max-width: 100%;
   padding: 0.2em;
 }
+
+.map-popup {
+  font-size:12px;line-height:1.2
+}
+
+.map-popup h1 {
+  font-size:12px;
+  line-height:1.2;
+  font-weight: bold;
+}

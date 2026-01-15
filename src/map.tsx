@@ -2,6 +2,7 @@ import {
   GeoJSONSource,
   Map,
   Marker,
+  Popup,
   type IControl,
   type MapOptions,
 } from 'mapbox-gl';
@@ -117,6 +118,21 @@ class MapboxMap extends HTMLElement {
       new CustomEvent('map-move', { detail: { bounds: this.map.getBounds() } })
     );
 
+    const popup = new Popup({
+      closeButton: false,
+      closeOnClick: false,
+    });
+
+    function escapeHtml(s: string) {
+      return s.replace(/[&<>"']/g, (c) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+      }[c] as string));
+    }
+
     this.map.on('load', () => {
       this.map
         .addSource('points', {
@@ -205,11 +221,25 @@ class MapboxMap extends HTMLElement {
             })
           );
         })
-        .on('mouseenter', 'unclustered-points', () => {
+        .on('mouseenter', 'unclustered-points', (e) => {
           this.map.getCanvas().style.cursor = 'pointer';
+          const feature = e.features?.[0];
+          if (!feature) return;
+
+          const coords = (feature.geometry as any).coordinates as [number, number];
+          const title = JSON.parse(feature.properties?.title) ?? null;
+          const popupTitle = String(title?.title ?? "");
+          const popupDesc = String(title?.desc ?? "");
+          const popupDate = String(title?.date ?? "");
+
+          popup
+            .setLngLat(coords)
+            .setHTML(`<div class="map-popup">${popupTitle && (`<h1>${escapeHtml(popupTitle)}</h1>`)}${escapeHtml(popupDesc)}<br>${popupDate}</div>`)
+            .addTo(this.map);
         })
         .on('mouseleave', 'unclustered-points', () => {
           this.map.getCanvas().style.cursor = '';
+          popup.remove();
         });
 
       this.attributeChangedCallback('data-points', '', this.dataset.points!);

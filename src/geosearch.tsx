@@ -9,6 +9,15 @@ if (!VITE_MAPBOX) {
   throw new Error('Missing VITE_MAPBOX env variable');
 }
 
+const cap = (name: string | undefined) => {
+  if (name) {
+    return name
+      .split(' ')
+      .map((item) => item.slice(0, 1).toUpperCase() + item.slice(1).toLowerCase())
+      .join(' ');
+  }
+}
+
 export function GeoSearch({
   onMarkerClick,
   selected = [],
@@ -64,6 +73,22 @@ export function GeoSearch({
     };
   }, []);
 
+  const popupText = (item: Brevet) => {
+    return {
+      title: item.name ?? null,
+      desc:  [
+        item.distance + 'km',
+        cap(item.city),
+        cap(item.department),
+        cap(item.region),
+        item.country,
+      ]
+        .filter(Boolean)
+        .join(', '),
+      date: item.date
+    }
+  }
+
   return (
     <mapbox-map
       ref={ref}
@@ -79,15 +104,7 @@ export function GeoSearch({
             selected: selected.includes(item.objectID),
             latitude: lat,
             longitude: lng,
-            title: [
-              item.distance + 'km',
-              item.city,
-              item.department,
-              item.region,
-              item.country,
-            ]
-              .filter(Boolean)
-              .join(', '),
+            title: popupText(item),
             link: item.site,
             _item: item,
           }))
