@@ -53,6 +53,35 @@ function WindowTitle() {
   return null;
 }
 
+function showRoute(link: string) {
+  let url = null;
+  if (link?.includes('ridewithgps.com/')) {
+    const routeId = link.match(/routes\/(\d+)/);
+    url = routeId ? `https://ridewithgps.com/embeds?type=route&id=${routeId[1]}&metricUnits=true&sampleGraph=true` : null;
+  }
+  if (link?.includes('komoot.com/')) {
+    const tour = link.match(/tour\/(\d+)/);
+    const shareToken = link.match(/share_token=(\w+)/);
+    const tokenValue = shareToken && shareToken[1] ? `share_token=${shareToken[1]}&` : ''
+    url = tour ? `https://www.komoot.com/tour/${tour[1]}/embed?${tokenValue}&profile=1` : null;
+    console.log(tour, shareToken);
+  }
+
+  if (link?.includes('plotaroute.com/')) {
+    const routeId = link.match(/route\/(\d+)/);
+    url = routeId ? `https://www.plotaroute.com/embedmap/${routeId[1]}?units=km` : null;
+  }
+
+  if (url) {
+    return (
+      <div>
+        <iframe src={url} style={{ minWidth:"100%", height: "700px", border: 0 }}></iframe>
+      </div>
+    )
+  }
+  return null;
+}
+
 function DisplayDetails() {
   const { items, sendEvent } = useHits<Brevet>();
 
@@ -71,9 +100,14 @@ function DisplayDetails() {
       <div className="ais-Hits-item">
         <HitCard hit={items[0]} />
       </div>
+      <>
+      {
+        items[0]?.map && items[0]?.map.map((item) => showRoute(item))
+      }
+      </>
       {items[0]._geoloc?.[0] && (
         <GeoSearch
-          onMarkerClick={() => {}}
+          onMarkerClick={() => { }}
           selected={items.map((hit) => hit.objectID)}
           center={items[0]._geoloc[0]}
           zoom={5}

@@ -1,7 +1,8 @@
 import { Brevet } from './types';
 
 export function HitCard({ hit }: { hit: Brevet }) {
-  const maps = hit.map?.filter((item) => item);
+  const maps = hit.map?.filter((item) => item).map((item) => item.split(' ')).flat();
+  
   return (
     <div
       data-objectid={hit.objectID}
