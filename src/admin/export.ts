@@ -9,6 +9,7 @@ import * as ireland from './export-ireland';
 import * as italy from './export-italy';
 import * as belgium from './export-belgium';
 import * as netherlands from './export-netherlands';
+import * as brevets_ru from './export-ru';
 import { Brevet } from '../types';
 
 const organizations = {
@@ -20,21 +21,23 @@ const organizations = {
   ireland: ireland.getData,
   italy: italy.getData,
   belgium: belgium.getData,
-  netherlands: netherlands.getData
+  netherlands: netherlands.getData,
+  brevets_ru: brevets_ru.getData
 };
 
 const flags = {
-  acp: true,
-  supabase: true, // also ACP
-  lrm: true,
-  usa: true,
-  auk: true,
-  ireland: true,
-  italy: true,
-  belgium: true,
-  netherlands: true,
-  geocode: true,
-  filter: true,
+  acp: false,
+  supabase: false, // also ACP
+  lrm: false,
+  usa: false,
+  auk: false,
+  ireland: false,
+  italy: false,
+  belgium: false,
+  netherlands: false,
+  brevets_ru: true,
+  geocode: false,
+  filter: false,
 };
 
 const { ALGOLIA_APP = '', ALGOLIA_WRITE = '', READ_INDEX = '' } = process.env;
