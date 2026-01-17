@@ -26,18 +26,18 @@ const organizations = {
 };
 
 const flags = {
-  acp: false,
-  supabase: false, // also ACP
-  lrm: false,
-  usa: false,
-  auk: false,
-  ireland: false,
-  italy: false,
-  belgium: false,
-  netherlands: false,
+  acp: true,
+  supabase: true, // also ACP
+  lrm: true,
+  usa: true,
+  auk: true,
+  ireland: true,
+  italy: true,
+  belgium: true,
+  netherlands: true,
   brevets_ru: true,
-  geocode: false,
-  filter: false,
+  geocode: true,
+  filter: true,
 };
 
 const { ALGOLIA_APP = '', ALGOLIA_WRITE = '', READ_INDEX = '' } = process.env;
